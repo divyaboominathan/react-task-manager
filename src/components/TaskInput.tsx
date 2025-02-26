@@ -3,7 +3,7 @@ import { useTask } from "../context/TaskContext";
 import { Button, Stack, TextField } from "@mui/material";
 
 const TaskInput = () => {
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState<string>("");
   const { addTask } = useTask();
 
   const handleAddTask = () => {
@@ -14,14 +14,23 @@ const TaskInput = () => {
   };
 
   return (
-    <Stack mb={10} sx={{display:"flex", padding:"20px", width:"300px",}}>
+    <Stack
+      mb={5}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        mt: 3,
+      }}
+    >
       <TextField
-        label="New Task"
+        label="Enter New Task"
         variant="outlined"
         value={task}
         onChange={(e) => setTask(e.target.value)}
         sx={{
-          marginBottom:"10px"
+          marginBottom: "10px",
         }}
       />
       <Button variant="contained" color="primary" onClick={handleAddTask}>

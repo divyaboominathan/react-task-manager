@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
   Checkbox,
@@ -5,26 +6,25 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import React from "react";
 import { useTask } from "../context/TaskContext";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Task } from "./constants";
 
 interface Props {
-  task: {
-    id: number;
-    title: string;
-    completed: boolean;
-  };
+  task: Task;
 }
 
 const TaskItem = ({ task }: Props) => {
-  const { editTask,deleteTask } = useTask();
+  const { editTask, deleteTask } = useTask();
+
   return (
     <Box>
       <ListItem>
         <Checkbox checked={task.completed} onChange={() => editTask(task.id)} />
         <ListItemText
           primary={task.title}
+          sx={{
+            textDecoration: task.completed ? "line-through" : "none",
+          }}
         />
         <IconButton onClick={() => deleteTask(task.id)} color="error">
           <DeleteIcon />

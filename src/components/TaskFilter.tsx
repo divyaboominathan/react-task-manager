@@ -1,22 +1,23 @@
-import React from 'react';
-import {Button,ButtonGroup} from '@mui/material';
+import { Button, ButtonGroup } from "@mui/material";
 import { useTask } from "../context/TaskContext";
+import { filters } from "./constants";
 
-const TaskFilter=()=> {
-    const {filter,setFilter} = useTask();
+const TaskFilter = () => {
+  const { filter, setFilter } = useTask();
+
   return (
-  <ButtonGroup >
-   <Button variant={filter === "all" ? "contained" : "outlined"} onClick={()=> setFilter("all")}>
-All
-    </Button>
-    <Button variant={filter === "completed" ? "contained" : "outlined"} onClick={()=> setFilter("completed")}    >
-        Completed
-    </Button>
-    <Button variant={filter === "pending" ? "contained" : "outlined"} onClick={()=> setFilter("pending")}>
-        Pending
-    </Button>
+    <ButtonGroup>
+      {filters.map((status) => (
+        <Button
+          key={status}
+          variant={filter === status ? "contained" : "outlined"}
+          onClick={() => setFilter(status)}
+        >
+          {status}
+        </Button>
+      ))}
     </ButtonGroup>
-  )
-}
+  );
+};
 
-export default TaskFilter
+export default TaskFilter;

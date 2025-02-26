@@ -1,18 +1,17 @@
-import React from "react";
-import { useTask } from "../context/TaskContext";
 import { Box } from "@mui/material";
+import { useTask } from "../context/TaskContext";
 import TaskItem from "./TaskItem";
 
 const TaskList = () => {
   const { tasks, filter } = useTask();
 
-  console.log("data", tasks);
-
-  const filteredTask = tasks.filter((task) => {
-    if (filter === "completed") return task.completed;
-    if (filter === "pending") return !task.completed;
-    return true;
-  });
+  const filteredTask = tasks.filter((task) =>
+    filter === "completed"
+      ? task.completed
+      : filter === "pending"
+      ? !task.completed
+      : true
+  );
 
   return (
     <Box>

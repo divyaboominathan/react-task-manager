@@ -1,6 +1,22 @@
 import React from "react";
+import { useQuery } from "react-query";
 import { apiClient } from "./apiClient";
 
-export const useTaskAPI = async() => {
-  return apiClient.get("/todos?_limit=5")
+const TASKS_KEY = "tasks";
+
+const useTaskAPI = () => {
+  const useFetchTasks = () => {
+    return useQuery<any[], Error>([TASKS_KEY], async () => {
+      const response = await apiClient.get("/todos?_limit=5");
+      return response?.data;
+    });
+  };
+
+  return React.useMemo(() => {
+    return {
+      useFetchTasks,
+    };
+  }, []);
 };
+
+export default useTaskAPI;

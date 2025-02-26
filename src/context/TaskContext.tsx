@@ -1,19 +1,12 @@
-import { error } from "console";
-import {
-  Children,
+import React, {
   createContext,
-  useContext,
-  useState,
   ReactNode,
+  useContext,
   useEffect,
+  useState,
 } from "react";
-import { apiClient } from "../hooks/api/apiClient";
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Task } from "../components/constants";
+import useTaskAPI from "../hooks/api/task-service";
 
 interface ContextType {
   tasks: Task[];
@@ -37,36 +30,43 @@ interface ProviderProps {
 }
 
 export const TaskProvider = ({ children }: ProviderProps) => {
+  const { useFetchTasks } = useTaskAPI();
+  const { data }: any = useFetchTasks();
   const [tasks, setTask] = useState<Task[]>([]);
   const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
-    apiClient.get("/todos?_limit=5").then((res) => {
-      setTask(res.data);
-    });
-  }, []);
+    if (data) {
+      setTask(data);
+    }
+  }, [data]);
 
   const addTask = (title: string) => {
-    const newTask: Task = { id: Date.now(), title, completed: false };
-    setTask([...tasks, newTask]);
+    setTask((prevTasks) => [
+      ...prevTasks,
+      { id: Date.now(), title, completed: false },
+    ]);
   };
 
   const editTask = (id: number) => {
-    setTask(
-      tasks.map((task) =>
+    setTask((prevTasks) =>
+      prevTasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
   };
 
-  const  deleteTask= (id: number) => {
-    setTask(tasks.filter((task) => task.id !== id));
+  const deleteTask = (id: number) => {
+    setTask((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
+  const contextValues = React.useMemo(
+    () => ({ tasks, filter, setFilter, addTask, deleteTask, editTask }),
+    [tasks, filter]
+  );
+
   return (
-    <TaskContext.Provider
-      value={{ tasks, filter, setFilter, addTask, deleteTask, editTask }}
-    >
+    <TaskContext.Provider value={contextValues}>
       {children}
     </TaskContext.Provider>
   );
